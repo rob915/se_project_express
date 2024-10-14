@@ -18,7 +18,7 @@ const routes = require("./routes");
 app.use(express.json());
 app.use((req, res, next) => {
   req.user = {
-    _id: "5d8b8592978f8bd833ca8133", // paste the _id of the test user created in the previous step
+    _id: "67076a4525a3d97f61588794", // paste the _id of the test user created in the previous step
   };
   next();
 });
