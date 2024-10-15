@@ -33,6 +33,10 @@ const clothingItemSchema = new mongoose.Schema({
     required: true,
     type: mongoose.Schema.Types.ObjectId,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model("clothingItems", clothingItemSchema);

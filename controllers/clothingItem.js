@@ -1,19 +1,16 @@
 const ClothingItem = require("../models/clothingItem");
 const {
   BAD_REQUEST,
-  OK,
   DOCUMENT_NOT_FOUND_ERROR,
   INTERNAL_SERVER_ERROR,
 } = require("../utils/errors");
 
 const getClothingItems = (req, res) => {
   ClothingItem.find({})
-    .then((items) => res.status(OK).send(items))
+    .then((items) => res.send(items))
     .catch((err) => {
       console.error(err);
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: `Error from createItem: ${err.message}` });
+      return res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
     });
 };
 
@@ -29,16 +26,14 @@ const createItem = (req, res) => {
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST).send({ message: err.message });
       }
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: `Error from createItem: ${err.message}` });
+      return res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
     });
 };
 
 const deleteClothingItems = (req, res) => {
   ClothingItem.findByIdAndRemove(req.params.id)
     .orFail()
-    .then((item) => res.status(OK).send(item))
+    .then((item) => res.send(item))
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
@@ -49,21 +44,19 @@ const deleteClothingItems = (req, res) => {
           .status(DOCUMENT_NOT_FOUND_ERROR)
           .send({ message: err.message });
       }
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: `Error from createItem: ${err.message}` });
+      return res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
     });
 };
 
 const likeItem = (req, res) =>
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
-    { $addToSet: { likes: req.user._id } }, // add _id to the array if it's not there yet
+    { $addToSet: { likes: req.user._id } },
     { new: true }
   )
     .orFail()
     .then((item) => {
-      res.status(OK).send(item);
+      res.send(item);
     })
     .catch((err) => {
       console.error(err);
@@ -81,12 +74,12 @@ const likeItem = (req, res) =>
 const dislikeItem = (req, res) =>
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
-    { $pull: { likes: req.user._id } }, // remove _id from the array
+    { $pull: { likes: req.user._id } },
     { new: true }
   )
     .orFail()
     .then((item) => {
-      res.status(OK).send(item);
+      res.send(item);
     })
     .catch((err) => {
       console.error(err);

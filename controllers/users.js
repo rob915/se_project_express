@@ -3,14 +3,13 @@ const {
   DOCUMENT_NOT_FOUND_ERROR,
   BAD_REQUEST,
   INTERNAL_SERVER_ERROR,
-  OK,
   CREATED,
 } = require("../utils/errors");
 
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => {
-      res.status(OK).send(users);
+      res.send(users);
     })
     .catch((err) => {
       console.error(err);
@@ -36,7 +35,7 @@ const getUser = (req, res) => {
   const { userId } = req.params;
   User.findById(userId)
     .orFail()
-    .then((user) => res.status(OK).send(user))
+    .then((user) => res.send(user))
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
