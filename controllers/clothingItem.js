@@ -10,7 +10,9 @@ const getClothingItems = (req, res) => {
     .then((items) => res.send(items))
     .catch((err) => {
       console.error(err);
-      return res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -24,9 +26,13 @@ const createItem = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST).send({ message: err.message });
+        return res
+          .status(BAD_REQUEST)
+          .send({ message: "An error has occurred on the server" });
       }
-      return res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -37,14 +43,18 @@ const deleteClothingItems = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: err.message });
+        return res
+          .status(BAD_REQUEST)
+          .send({ message: "An error has occurred on the server" });
       }
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(DOCUMENT_NOT_FOUND_ERROR)
-          .send({ message: err.message });
+          .send({ message: "An error has occurred on the server" });
       }
-      return res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -63,12 +73,16 @@ const likeItem = (req, res) =>
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(DOCUMENT_NOT_FOUND_ERROR)
-          .send({ message: err.message });
+          .send({ message: "An error has occurred on the server" });
       }
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: err.message });
+        return res
+          .status(BAD_REQUEST)
+          .send({ message: "An error has occurred on the server" });
       }
-      return res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 
 const dislikeItem = (req, res) =>
@@ -86,12 +100,16 @@ const dislikeItem = (req, res) =>
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(DOCUMENT_NOT_FOUND_ERROR)
-          .send({ message: err.message });
+          .send({ message: "An error has occurred on the server" });
       }
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: err.message });
+        return res
+          .status(BAD_REQUEST)
+          .send({ message: "An error has occurred on the server" });
       }
-      return res.status(INTERNAL_SERVER_ERROR).send({ message: err.message });
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 
 module.exports = {
