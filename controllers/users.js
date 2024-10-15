@@ -27,9 +27,7 @@ const createUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {
-        return res
-          .status(BAD_REQUEST)
-          .send({ message: "An error has occurred on the server" });
+        return res.status(BAD_REQUEST).send({ message: "Invalid data error" });
       }
       return res
         .status(INTERNAL_SERVER_ERROR)
@@ -47,12 +45,10 @@ const getUser = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(DOCUMENT_NOT_FOUND_ERROR)
-          .send({ message: "An error has occurred on the server" });
+          .send({ message: "The data was not found" });
       }
       if (err.name === "CastError") {
-        return res
-          .status(BAD_REQUEST)
-          .send({ message: "An error has occurred on the server" });
+        return res.status(BAD_REQUEST).send({ message: "Invalid data error" });
         // Bad request
       }
       return res
