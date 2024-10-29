@@ -93,7 +93,11 @@ const updateProfile = (req, res) => {
   const { name, avatar } = req.body;
   const { _id } = req.user;
 
-  User.findByIdAndUpdate(_id, { name, avatar }, { new: true })
+  User.findByIdAndUpdate(
+    _id,
+    { name, avatar },
+    { new: true, runValidators: true }
+  )
     .then((user) => {
       res.send(user);
     })
