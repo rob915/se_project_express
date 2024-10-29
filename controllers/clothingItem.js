@@ -3,6 +3,7 @@ const {
   BAD_REQUEST,
   DOCUMENT_NOT_FOUND_ERROR,
   INTERNAL_SERVER_ERROR,
+  FORBIDDEN,
 } = require("../utils/errors");
 
 const getClothingItems = (req, res) => {
@@ -44,7 +45,7 @@ const deleteClothingItems = (req, res) => {
         });
       } else {
         res
-          .status(403)
+          .status(FORBIDDEN)
           .send({ message: "Attempting to delete another User's Item" });
       }
     })
