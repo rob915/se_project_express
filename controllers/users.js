@@ -8,20 +8,8 @@ const {
   INTERNAL_SERVER_ERROR,
   CREATED,
   ASSERTION_ERROR,
+  UNAUTHORIZED,
 } = require("../utils/errors");
-
-const getUsers = (req, res) => {
-  User.find({})
-    .then((users) => {
-      res.send(users);
-    })
-    .catch((err) => {
-      console.error(err);
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server" });
-    });
-};
 
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
@@ -77,6 +65,13 @@ const getUser = (req, res) => {
 
 const login = (req, res) => {
   const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res
+      .status(BAD_REQUEST)
+      .send({ message: "The password and email fields are required" });
+  }
+
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
@@ -85,7 +80,14 @@ const login = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      res.status(BAD_REQUEST).send({ message: err.message });
+      if (err.message === "Incorrect email or password") {
+        return res
+          .status(UNAUTHORIZED)
+          .send({ message: "Incorrect email or password" });
+      }
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -102,8 +104,13 @@ const updateProfile = (req, res) => {
       res.send(user);
     })
     .catch((err) => {
-      res.status(BAD_REQUEST).send({ message: err.message });
+      if (err.name === "VaidationError") {
+        return res.status(BAD_REQUEST).send("Invalid data error");
+      }
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
-module.exports = { getUsers, createUser, getUser, login, updateProfile };
+module.exports = { createUser, getUser, login, updateProfile };
