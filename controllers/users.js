@@ -1,7 +1,7 @@
-const User = require("../models/user");
-const { JWT_SECRET } = require("../utils/config");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const User = require("../models/user");
+const { JWT_SECRET } = require("../utils/config");
 const {
   DOCUMENT_NOT_FOUND_ERROR,
   BAD_REQUEST,
@@ -9,7 +9,6 @@ const {
   CREATED,
   ASSERTION_ERROR,
 } = require("../utils/errors");
-const user = require("../models/user");
 
 const getUsers = (req, res) => {
   User.find({})
