@@ -6,12 +6,16 @@ const {
   likeItem,
   dislikeItem,
 } = require("../controllers/clothingItem");
+const { auth } = require("../middlewares/auth");
 
 // PUT /items/:itemId/likes — like an item
 // DELETE /items/:itemId/likes — unlike an item
 
-router.post("/", createItem);
 router.get("/", getClothingItems);
+
+router.use(auth);
+
+router.post("/", createItem);
 router.delete("/:id", deleteClothingItems);
 router.put("/:itemId/likes", likeItem);
 router.delete("/:itemId/likes", dislikeItem);

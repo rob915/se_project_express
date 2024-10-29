@@ -35,9 +35,19 @@ const createItem = (req, res) => {
 };
 
 const deleteClothingItems = (req, res) => {
-  ClothingItem.findByIdAndRemove(req.params.id)
+  ClothingItem.findById(req.params.id)
     .orFail()
-    .then((item) => res.send(item))
+    .then((item) => {
+      if (item.owner.equals(req.user._id)) {
+        ClothingItem.deleteOne(item).then(() => {
+          res.send({ message: "Item successfully deleted" });
+        });
+      } else {
+        res
+          .status(403)
+          .send({ message: "Attempting to delete another User's Item" });
+      }
+    })
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
