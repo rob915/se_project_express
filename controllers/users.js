@@ -73,11 +73,19 @@ const login = (req, res) => {
   }
 
   return User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+    .then(({ _id, name, email, avatar }) => {
+      const token = jwt.sign({ _id: _id }, JWT_SECRET, {
         expiresIn: "7d",
       });
-      res.send({ token });
+      res.send({
+        token,
+        user: {
+          _id,
+          name,
+          email,
+          avatar,
+        },
+      });
     })
     .catch((err) => {
       if (err.message === "Incorrect email or password") {
