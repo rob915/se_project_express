@@ -94,6 +94,8 @@ const likeItem = (req, res) =>
         .send({ message: "An error has occurred on the server" });
     });
 
+// item.map((c) => c._id === id);
+
 const dislikeItem = (req, res) =>
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
