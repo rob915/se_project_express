@@ -10,8 +10,12 @@ const {
   ASSERTION_ERROR,
   UNAUTHORIZED,
 } = require("../utils/errors");
+const BadRequestError = require("../errors/badRequestError");
+const NotFoundError = require("../errors/NotFoundError");
+const ConflictError = require("../errors/ConflictError");
+const UnauthorizedError = require("../errors/UnauthorizedError");
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
 
   bcrypt.hash(password, 10).then((hash) =>
@@ -26,18 +30,12 @@ const createUser = (req, res) => {
       .catch((err) => {
         console.error(err);
         if (err.name === "ValidationError") {
-          return res
-            .status(BAD_REQUEST)
-            .send({ message: "Invalid data error" });
+          next(new BadRequestError("The id string is an invalid format"));
+        } else if (err.code === 11000) {
+          next(new ConflictError("Email already registered"));
+        } else {
+          next(err);
         }
-        if (err.code === 11000) {
-          return res
-            .status(ASSERTION_ERROR)
-            .send({ message: "Email already registered" });
-        }
-        return res
-          .status(INTERNAL_SERVER_ERROR)
-          .send({ message: "An error has occurred on the server" });
       })
   );
 };
@@ -50,16 +48,12 @@ const getUser = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
-        return res
-          .status(DOCUMENT_NOT_FOUND_ERROR)
-          .send({ message: "The data was not found" });
+        next(new NotFoundError("The data was not found"));
+      } else if (err.name === "CastError") {
+        next(new BadRequestError("Invalid data error"));
+      } else {
+        next(err);
       }
-      if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: "Invalid data error" });
-      }
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -67,9 +61,7 @@ const login = (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res
-      .status(BAD_REQUEST)
-      .send({ message: "The password and email fields are required" });
+    next(new BadRequestError("The password and email fields are required"));
   }
 
   return User.findUserByCredentials(email, password)
@@ -89,13 +81,9 @@ const login = (req, res) => {
     })
     .catch((err) => {
       if (err.message === "Incorrect email or password") {
-        return res
-          .status(UNAUTHORIZED)
-          .send({ message: "Incorrect email or password" });
+        next(new UnauthorizedError("Incorrect email or password"));
       }
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server" });
+      next(err);
     });
 };
 
@@ -113,11 +101,9 @@ const updateProfile = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "VaidationError") {
-        return res.status(BAD_REQUEST).send("Invalid data error");
+        next(new BadRequestError("Invalid data error"));
       }
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server" });
+      next(err);
     });
 };
 
