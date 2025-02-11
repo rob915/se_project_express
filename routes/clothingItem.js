@@ -7,6 +7,10 @@ const {
   dislikeItem,
 } = require("../controllers/clothingItem");
 const { auth } = require("../middlewares/auth");
+const {
+  validateClothingItemOnCreate,
+  validateItemId,
+} = require("../middlewares/validation");
 
 router.get("/", getClothingItems);
 
