@@ -10,7 +10,7 @@ const {
   ASSERTION_ERROR,
   UNAUTHORIZED,
 } = require("../utils/errors");
-const BadRequestError = require("../errors/badRequestError");
+const BadRequestError = require("../errors/BadRequestError");
 const NotFoundError = require("../errors/NotFoundError");
 const ConflictError = require("../errors/ConflictError");
 const UnauthorizedError = require("../errors/UnauthorizedError");
