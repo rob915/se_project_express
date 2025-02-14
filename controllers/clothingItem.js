@@ -6,7 +6,7 @@ const {
   FORBIDDEN,
 } = require("../utils/errors");
 
-const BadRequestError = require("../errors/badRequestError");
+const BadRequestError = require("../errors/BadRequestError");
 const ForbiddenError = require("../errors/ForbiddenError");
 const NotFoundError = require("../errors/NotFoundError");
 
