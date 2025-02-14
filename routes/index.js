@@ -9,8 +9,8 @@ const {
 } = require("../middlewares/validation");
 
 router.use("/items", clothingItemRouter);
-router.post("/signup", createUser);
-router.post("/signin", login);
+router.post("/signup", validateUserInfoBodyOnCreate, createUser);
+router.post("/signin", authenticationOnUserLogin, login);
 router.use("/users", userRouter);
 
 router.use((req, res) => {
