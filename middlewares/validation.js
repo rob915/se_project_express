@@ -22,7 +22,7 @@ const validateClothingItemOnCreate = celebrate({
       "string.uri": 'The "imageUrl" field must be a valid url',
     }),
 
-    weather: Joi.string(),
+    weather: Joi.string().required().valid("hot", "warm", "cold"),
   }),
 });
 
