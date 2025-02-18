@@ -40,7 +40,7 @@ const createUser = (req, res, next) => {
   );
 };
 
-const getUser = (req, res) => {
+const getUser = (req, res, next) => {
   const userId = req.user._id;
   User.findById(userId)
     .orFail()
@@ -57,14 +57,14 @@ const getUser = (req, res) => {
     });
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
     next(new BadRequestError("The password and email fields are required"));
   }
 
-  return User.findUserByCredentials(email, password)
+  return User.findUserByCredentials(email, password, next)
     .then(({ _id, name, email, avatar }) => {
       const token = jwt.sign({ _id }, JWT_SECRET, {
         expiresIn: "7d",
@@ -87,7 +87,7 @@ const login = (req, res) => {
     });
 };
 
-const updateProfile = (req, res) => {
+const updateProfile = (req, res, next) => {
   const { name, avatar } = req.body;
   const { _id } = req.user;
 
