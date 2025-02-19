@@ -2,14 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
-const {
-  DOCUMENT_NOT_FOUND_ERROR,
-  BAD_REQUEST,
-  INTERNAL_SERVER_ERROR,
-  CREATED,
-  ASSERTION_ERROR,
-  UNAUTHORIZED,
-} = require("../utils/errors");
+const { CREATED } = require("../utils/errors");
 const BadRequestError = require("../errors/BadRequestError");
 const NotFoundError = require("../errors/NotFoundError");
 const ConflictError = require("../errors/ConflictError");
@@ -64,8 +57,8 @@ const login = (req, res, next) => {
     next(new BadRequestError("The password and email fields are required"));
   }
 
-  return User.findUserByCredentials(email, password, next)
-    .then(({ _id, name, email, avatar }) => {
+  return User.findUserByCredentials(email, password)
+    .then(({ _id, name, avatar }) => {
       const token = jwt.sign({ _id }, JWT_SECRET, {
         expiresIn: "7d",
       });
